@@ -37,7 +37,7 @@ jobs:
           which openssl
           openssl version
       - name: build
-        run: make release-static-win64
+        run: make release-static-win64 -j4
       - name: create ${{ env.BASE_FILENAME }}.7z
         run: 7z a ${{ env.BASE_FILENAME }}.7z *
         working-directory: build/release/bin
