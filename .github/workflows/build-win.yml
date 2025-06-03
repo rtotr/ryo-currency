@@ -1,18 +1,17 @@
 name: workflows/build-win
 
 on:
-  push:
-    branches:
-      - dev-github-actions
-    paths:
-      - '**/*-win.yml'
+  # push:
+  #   branches:
+  #     - dev-github-actions
+  #   paths:
+  #     - '**/*-win.yml'
   workflow_call:
   workflow_dispatch:
 
 env:
-  BASE_FILENAME: rtyo-win-x64
+  BASE_FILENAME: ryo-win-x64
     
-# test win trigger 4
 jobs:
   build-win:
     name: 'Windows (MSYS2)'

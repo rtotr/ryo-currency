@@ -1,18 +1,17 @@
 name: workflows/build-linux
 
 on:
-  push:
-    branches:
-      - dev-github-actions
-    paths:
-      - '**/*-linux.yml'
+  # push:
+  #   branches:
+  #     - dev-github-actions
+  #   paths:
+  #     - '**/*-linux.yml'
   workflow_call:
   workflow_dispatch:
 
 env:
-  BASE_FILENAME: rtyo-linux-x64
+  BASE_FILENAME: ryo-linux-x64
 
-# test linux trigger 3
 jobs:
   build-linux:
     name: 'Ubuntu (latest)'
