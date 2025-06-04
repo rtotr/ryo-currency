@@ -22,12 +22,11 @@ jobs:
           submodules: true
       - name: update version.cpp.in
         if: github.ref_type == 'tag'
-        uses: jacobtomlinson/gha-find-replace@v3
-        with:
-          find: '#define\s+DEF_RYO_VERSION\s+ "[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+"'
-          replace: '#define DEF_RYO_VERSION "${{ github.ref_name }}"'
-          include: "src/version.cpp.in"
-          regex: true      
+        shell: pwsh
+        run: |
+          $content = Get-Content -Path "src/version.cpp.in" -Raw
+          $newContent = $content -replace '#define\s+DEF_RYO_VERSION\s+"[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+"', "#define DEF_RYO_VERSION `"${{ github.ref_name }}`""
+          Set-Content -Path "src/version.cpp.in" -Value $newContent
       - name: install dependencies
         shell: bash
         run: |
