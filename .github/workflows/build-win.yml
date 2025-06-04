@@ -45,7 +45,7 @@ jobs:
       - name: build
         run: make release-static-win64 -j4
       - name: create ${{ env.BASE_FILENAME }}.7z
-        run: 7z a ${{ env.BASE_FILENAME }}.7z *
+        run: 7z a ${{ env.BASE_FILENAME }}.7z * -x!*.a
         working-directory: build/release/bin
       - uses: actions/upload-artifact@v4
         id: upload-artifact-step
