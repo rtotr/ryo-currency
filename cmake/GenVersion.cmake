@@ -62,7 +62,6 @@ else()
     # Get the current working branch
     execute_process(
       COMMAND "${GIT}" rev-parse --abbrev-ref HEAD
-      WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
       OUTPUT_VARIABLE GIT_BRANCH
       OUTPUT_STRIP_TRAILING_WHITESPACE
     )
