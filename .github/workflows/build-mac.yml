@@ -35,7 +35,7 @@ jobs:
           brew install --quiet openssl zeromq cppzmq miniupnpc expat libunwind-headers
           HOMEBREW_NO_INSTALL_FROM_API=1
           brew tap --force homebrew/core
-          sudo sed -i '' 's/^disable! date: /deprecate! date: /' /opt/homebrew/Library/Taps/homebrew/homebrew-core/Formula/b/boost@1.76.rb
+          sudo sed -i '' 's/^\([[:space:]]*\)disable! date: /\1deprecate! date: /' /opt/homebrew/Library/Taps/homebrew/homebrew-core/Formula/b/boost@1.76.rb
           cat /opt/homebrew/Library/Taps/homebrew/homebrew-core/Formula/b/boost@1.76.rb
           brew install --quiet boost@1.76
           cmake --version
