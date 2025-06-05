@@ -32,8 +32,7 @@ jobs:
           Set-Content -Path "src/version.cpp.in" -Value $newContent
       - name: install dependencies
         run: |
-          # brew update
-          brew install --quiet cmake openssl zeromq cppzmq miniupnpc expat libunwind-headers boost@1.76
+          brew install --quiet cmake openssl zeromq cppzmq miniupnpc expat libunwind-headers boost@1.85
           cmake --version
           gcc --version
       - name: build
