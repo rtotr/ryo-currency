@@ -32,6 +32,7 @@ jobs:
           Set-Content -Path "src/version.cpp.in" -Value $newContent
       - name: install dependencies
         run: |
+          brew update
           brew install --quiet openssl zeromq cppzmq miniupnpc expat libunwind-headers
           export HOMEBREW_NO_INSTALL_FROM_API=1
           brew tap --force homebrew/core
