@@ -62,11 +62,22 @@ else()
     # Get the current working branch
     message(STATUS "CMake source dir: ${CMAKE_SOURCE_DIR}")
     execute_process(
-      COMMAND "${GIT}" symbolic-ref --short HEAD || "${GIT}" rev-parse --short HEAD
+      COMMAND "${GIT}" symbolic-ref --short HEAD
       WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+      RESULT_VARIABLE BRANCH_RESULT
       OUTPUT_VARIABLE GIT_BRANCH
       OUTPUT_STRIP_TRAILING_WHITESPACE
     )
+    
+    if(BRANCH_RESULT)
+        # If symbolic-ref failed, we're in detached HEAD state, use commit hash
+        execute_process(
+          COMMAND "${GIT}" rev-parse --short HEAD
+          WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+          OUTPUT_VARIABLE GIT_BRANCH
+          OUTPUT_STRIP_TRAILING_WHITESPACE
+        )
+    endif()
 	    
     configure_file("src/version.cpp.in" "${TO}")
 endif()
