@@ -334,7 +334,8 @@ struct config<TESTNET>
 	static constexpr uint16_t RPC_DEFAULT_PORT = 13311;
 	static constexpr uint16_t ZMQ_RPC_DEFAULT_PORT = 13312;
 
-	static constexpr boost::uuids::uuid NETWORK_ID = { { 0x6f, 0x81, 0x7d, 0x7e, 0xa2, 0x0b, 0x71, 0x77, 0x22, 0xc8, 0xd2, 0xff, 0x02, 0x5d, 0xe9, 0x92 } };
+	// Using explicit constructor to make it a compile-time constant expression
+	static constexpr boost::uuids::uuid NETWORK_ID = boost::uuids::uuid{{0x6f, 0x81, 0x7d, 0x7e, 0xa2, 0x0b, 0x71, 0x77, 0x22, 0xc8, 0xd2, 0xff, 0x02, 0x5d, 0xe9, 0x92}};
 
 	static constexpr const char *GENESIS_TX =
 		"023c01ff0001808098d0daf1d00f028be379aa57a70fa19c0ee5765fdc3d2aae0b1034158f4963e157d9042c24fbec21013402fc7071230f1f86f33099119105a7b1f64a898526060ab871e685059c223100";
@@ -368,7 +369,8 @@ struct config<STAGENET>
 	static constexpr uint16_t RPC_DEFAULT_PORT = 14411;
 	static constexpr uint16_t ZMQ_RPC_DEFAULT_PORT = 14412;
 
-	static constexpr boost::uuids::uuid NETWORK_ID = { { 0x15, 0x77, 0x3a, 0x26, 0x42, 0xa0, 0x3f, 0xf3, 0xe5, 0x79, 0x72, 0x8d, 0x4e, 0x5a, 0xf2, 0x98 } };
+	// Using explicit constructor to make it a compile-time constant expression
+	static constexpr boost::uuids::uuid NETWORK_ID = boost::uuids::uuid{{0x15, 0x77, 0x3a, 0x26, 0x42, 0xa0, 0x3f, 0xf3, 0xe5, 0x79, 0x72, 0x8d, 0x4e, 0x5a, 0xf2, 0x98}};
 
 	static constexpr const char *GENESIS_TX =
 		"013c01ff0001ffffffffffff0302df5d56da0c7d643ddd1ce61901c7bdc5fb1738bfe39fbe69c28a3a7032729c0f2101168d0c4ca86fb55a4cf6a36d31431be1c53a3bd7411bb24e8832410289fa6f3b";
