@@ -35,7 +35,7 @@ jobs:
           brew update
           brew install --quiet cmake boost openssl zmq miniupnpc expat libunwind-headers
       - name: build
-        run: make -j3
+        run: make release-mac-arm64 -j3
       - name: create ${{ env.BASE_FILENAME }}.tar.xz
         run: tar -cJf ${{ env.BASE_FILENAME }}.tar.xz *
         working-directory: build/release/bin
