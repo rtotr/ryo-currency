@@ -1,0 +1,46 @@
+name: workflows/build-mac
+
+on:
+  push:
+    branches:
+      - dev-github-actions-mac
+    paths:
+      - '**/*-mac.yml'
+  workflow_call:
+  workflow_dispatch:
+
+env:
+  BASE_FILENAME: rtyo-mac-arm64
+    
+jobs:
+  build-mac:
+    name: 'MacOS (brew)'
+    runs-on: macos-latest
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+      - name: update version.cpp.in
+        if: github.ref_type == 'tag'
+        shell: pwsh
+        run: |
+          $content = Get-Content -Path "src/version.cpp.in" -Raw
+          $newContent = $content -replace '#define\s+DEF_RYO_VERSION\s+"[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+"', "#define DEF_RYO_VERSION `"${{ github.ref_name }}`""
+          Set-Content -Path "src/version.cpp.in" -Value $newContent
+      - name: install dependencies
+        run: |
+          brew update
+          brew install --quiet cmake boost openssl zmq miniupnpc expat libunwind-headers
+      - name: build
+        run: make -j3
+      - name: create ${{ env.BASE_FILENAME }}.tar.xz
+        run: tar -cJf ${{ env.BASE_FILENAME }}.tar.xz *
+        working-directory: build/release/bin
+      - uses: actions/upload-artifact@v4
+        id: upload-artifact-step
+        with:
+          name: ${{ github.job }}   # job names must start with 'build-' for the release workflow to work correctly
+          path: build/release/bin/${{ env.BASE_FILENAME }}.tar.xz
