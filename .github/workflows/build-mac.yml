@@ -33,7 +33,7 @@ jobs:
       - name: install dependencies
         run: |
           brew update
-          brew install --quiet cmake boost openssl zmq miniupnpc expat libunwind-headers
+          brew install --quiet cmake boost openssl zeromq cppzmq miniupnpc expat libunwind-headers readline
       - name: build
         run: make release-mac-arm64 -j3
       - name: create ${{ env.BASE_FILENAME }}.tar.xz
