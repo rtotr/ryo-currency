@@ -60,8 +60,10 @@ else()
     endif()
 
     # Get the current working branch
+    message(STATUS "CMake source dir: ${CMAKE_SOURCE_DIR}")
     execute_process(
-      COMMAND "${GIT}" rev-parse --abbrev-ref HEAD
+      COMMAND "${GIT}" symbolic-ref --short HEAD || "${GIT}" rev-parse --short HEAD
+      WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
       OUTPUT_VARIABLE GIT_BRANCH
       OUTPUT_STRIP_TRAILING_WHITESPACE
     )
