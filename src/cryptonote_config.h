@@ -299,7 +299,7 @@ struct config<MAINNET>
 	static constexpr uint16_t ZMQ_RPC_DEFAULT_PORT = 12212;
 
 	//Random UUID generated from radioactive cs-137 ( http://www.fourmilab.ch/hotbits/how3.html ) it gives me a nice warm feeling =)
-  static constexpr boost::uuids::uuid NETWORK_ID = {{ 0xcd, 0xac, 0x50, 0x2e, 0xb3, 0x74, 0x8f, 0xf2, 0x0f, 0xb7, 0x72, 0x18, 0x0f, 0x73, 0x24, 0x13 }};
+  	static constexpr boost::uuids::uuid NETWORK_ID = {{ 0xcd, 0xac, 0x50, 0x2e, 0xb3, 0x74, 0x8f, 0xf2, 0x0f, 0xb7, 0x72, 0x18, 0x0f, 0x73, 0x24, 0x13 }};
 		
 	static constexpr const char *GENESIS_TX =
 		"023c01ff0001808098d0daf1d00f028be379aa57a70fa19c0ee5765fdc3d2aae0b1034158f4963e157d9042c24fbec21013402fc7071230f1f86f33099119105a7b1f64a898526060ab871e685059c223100";
