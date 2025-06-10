@@ -102,6 +102,10 @@ release-static-mac-x86_64:
 	mkdir -p build/release
 	cd build/release && cmake -D STATIC=ON -D ARCH="x86-64" -D BUILD_64=ON -D CMAKE_BUILD_TYPE=release -D BUILD_TAG="mac-x64" ../.. && $(MAKE)
 
+release-mac-arm64:
+	mkdir -p build/release
+	cd build/release && cmake -D BUILD_TESTS=ON -D CMAKE_BUILD_TYPE=Release -D BUILD_TAG="mac-arm64" -D CMAKE_POLICY_VERSION_MINIMUM=3.5 ../.. && $(MAKE)
+
 release-static-linux-i686:
 	mkdir -p build/release
 	cd build/release && cmake -D STATIC=ON -D ARCH="i686" -D BUILD_64=OFF -D CMAKE_BUILD_TYPE=release -D BUILD_TAG="linux-x86" ../.. && $(MAKE)
