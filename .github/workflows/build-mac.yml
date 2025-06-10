@@ -1,12 +1,12 @@
 name: workflows/build-mac
 
 on:
-  push:
-    branches:
-      - dev-github-actions-mac-clean
-    paths:
-      - '**/*-mac.yml'
-      - '**/CMake*.txt'
+  # push:
+  #   branches:
+  #     - dev-github-actions-mac-clean
+  #   paths:
+  #     - '**/*-mac.yml'
+  #     - '**/CMake*.txt'
   workflow_call:
   workflow_dispatch:
 
