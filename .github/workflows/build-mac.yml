@@ -1,0 +1,57 @@
+name: workflows/build-mac
+
+on:
+  push:
+    branches:
+      - dev-github-actions-mac-clean
+    paths:
+      - '**/*-mac.yml'
+      - '**/CMake*.txt'
+  workflow_call:
+  workflow_dispatch:
+
+env:
+  BASE_FILENAME: rtyo-mac-arm64
+    
+jobs:
+  build-mac:
+    name: 'MacOS (brew)'
+    runs-on: macos-latest
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+      - name: update version.cpp.in
+        if: github.ref_type == 'tag'
+        shell: pwsh
+        run: |
+          $content = Get-Content -Path "src/version.cpp.in" -Raw
+          $newContent = $content -replace '#define\s+DEF_RYO_VERSION\s+"[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+"', "#define DEF_RYO_VERSION `"${{ github.ref_name }}`""
+          Set-Content -Path "src/version.cpp.in" -Value $newContent
+      - name: install dependencies
+        run: |
+          brew update
+          brew install --quiet openssl zeromq cppzmq miniupnpc expat libunwind-headers
+          brew install --quiet boost@1.85
+          brew link --quiet boost@1.85
+          # export HOMEBREW_NO_INSTALL_FROM_API=1
+          # brew tap --force homebrew/core
+          # sudo sed -i '' 's/^\([[:space:]]*\)disable! date: /\1deprecate! date: /' /opt/homebrew/Library/Taps/homebrew/homebrew-core/Formula/b/boost@1.76.rb
+          # sudo sed -i '' 's/^\([[:space:]]*\)disable! date: /\1deprecate! date: /' /opt/homebrew/Library/Taps/homebrew/homebrew-core/Formula/i/icu4c@74.rb
+          # brew install --quiet boost@1.76
+          cmake --version
+          gcc --version
+          # brew info boost@1.85
+      - name: build
+        run: make release-mac-arm64 -j3
+      - name: create ${{ env.BASE_FILENAME }}.tar.xz
+        run: tar -cJf ${{ env.BASE_FILENAME }}.tar.xz *
+        working-directory: build/release/bin
+      - uses: actions/upload-artifact@v4
+        id: upload-artifact-step
+        with:
+          name: ${{ github.job }}   # job names must start with 'build-' for the release workflow to work correctly
+          path: build/release/bin/${{ env.BASE_FILENAME }}.tar.xz
