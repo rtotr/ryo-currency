@@ -11,7 +11,7 @@ on:
   workflow_dispatch:
 
 env:
-  BASE_FILENAME: rtyo-mac-arm64
+  BASE_FILENAME: ryo-mac-arm64
     
 jobs:
   build-mac:
