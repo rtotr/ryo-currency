@@ -1,0 +1,54 @@
+name: workflows/build-win
+
+on:
+  # push:
+  #   branches:
+  #     - dev-github-actions
+  #   paths:
+  #     - '**/*-win.yml'
+  workflow_call:
+  workflow_dispatch:
+
+env:
+  BASE_FILENAME: ryo-win-x64
+    
+jobs:
+  build-win:
+    name: 'Windows (MSYS2)'
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: msys2 {0}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+      - name: update version.cpp.in
+        if: github.ref_type == 'tag'
+        shell: pwsh
+        run: |
+          $content = Get-Content -Path "src/version.cpp.in" -Raw
+          $newContent = $content -replace '#define\s+DEF_RYO_VERSION\s+"[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+"', "#define DEF_RYO_VERSION `"${{ github.ref_name }}`""
+          Set-Content -Path "src/version.cpp.in" -Value $newContent
+      - uses: msys2/setup-msys2@v2
+        with:
+          update: true
+          install: p7zip mingw-w64-x86_64-toolchain make mingw-w64-x86_64-cmake mingw-w64-x86_64-zeromq mingw-w64-x86_64-cppzmq mingw-w64-x86_64-libsodium mingw-w64-x86_64-hidapi mingw-w64-x86_64-protobuf mingw-w64-x86_64-libusb git pkg-config
+      - name: install older packages
+        run: |
+          pacman -U --noconfirm https://repo.msys2.org/mingw/mingw64/mingw-w64-x86_64-boost-1.83.0-2-any.pkg.tar.zst
+          pacman -U --noconfirm https://repo.msys2.org/mingw/mingw64/mingw-w64-x86_64-icu-74.1-1-any.pkg.tar.zst
+          cmake --version
+          gcc --version
+          which openssl
+          openssl version
+      - name: build
+        run: make release-static-win64 -j4
+      - name: create ${{ env.BASE_FILENAME }}.7z
+        run: 7z a ${{ env.BASE_FILENAME }}.7z * -x!*.a
+        working-directory: build/release/bin
+      - uses: actions/upload-artifact@v4
+        id: upload-artifact-step
+        with:
+          name: ${{ github.job }}   # job names must start with 'build-' for the release workflow to work correctly
+          path: build/release/bin/${{ env.BASE_FILENAME }}.7z

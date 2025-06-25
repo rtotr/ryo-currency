@@ -398,6 +398,21 @@ void cn_slow_hash<MEMORY, ITER, VERSION>::hardware_hash(const void* in, size_t l
 	}
 }
 
+#if defined(__aarch64__)
+template <size_t MEMORY, size_t ITER, size_t VERSION>
+void cn_slow_hash<MEMORY, ITER, VERSION>::hardware_hash_3(const void* in, size_t len, void* pout)
+{
+	keccak((const uint8_t*)in, len, spad.as_byte(), 200);
+
+	explode_scratchpad_3();
+	inner_hash_3();
+	implode_scratchpad_hard();
+
+	keccakf(spad.as_uqword());
+	memcpy(pout, spad.as_byte(), 32);
+}
+#endif
+
 #endif // HAS_ARM_HW
 
 #ifdef HAS_ARM
@@ -569,21 +584,6 @@ void cn_slow_hash<MEMORY, ITER, VERSION>::inner_hash_3()
 		idx3 = scratchpad_ptr(n, 3);
 	}
 }
-
-#if defined(__aarch64__)
-template <size_t MEMORY, size_t ITER, size_t VERSION>
-void cn_slow_hash<MEMORY, ITER, VERSION>::hardware_hash_3(const void* in, size_t len, void* pout)
-{
-	keccak((const uint8_t*)in, len, spad.as_byte(), 200);
-
-	explode_scratchpad_3();
-	inner_hash_3();
-	implode_scratchpad_hard();
-
-	keccakf(spad.as_uqword());
-	memcpy(pout, spad.as_byte(), 32);
-}
-#endif
 
 template <size_t MEMORY, size_t ITER, size_t VERSION>
 void cn_slow_hash<MEMORY, ITER, VERSION>::software_hash_3(const void* in, size_t len, void* pout)

@@ -1,0 +1,46 @@
+name: workflows/build-linux
+
+on:
+  # push:
+  #   branches:
+  #     - dev-github-actions
+  #   paths:
+  #     - '**/*-linux.yml'
+  workflow_call:
+  workflow_dispatch:
+
+env:
+  BASE_FILENAME: ryo-linux-x64
+
+jobs:
+  build-linux:
+    name: 'Ubuntu (latest)'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+      - name: update version.cpp.in
+        if: github.ref_type == 'tag'
+        shell: pwsh
+        run: |
+          $content = Get-Content -Path "src/version.cpp.in" -Raw
+          $newContent = $content -replace '#define\s+DEF_RYO_VERSION\s+"[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+"', "#define DEF_RYO_VERSION `"${{ github.ref_name }}`""
+          Set-Content -Path "src/version.cpp.in" -Value $newContent
+      - name: install dependencies
+        shell: bash
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libssl-dev libzmq3-dev libunbound-dev libsodium-dev libminiupnpc-dev libunwind8-dev liblzma-dev libreadline6-dev libldns-dev libexpat1-dev doxygen graphviz libpcsclite-dev libfmt-dev libeasyloggingpp-dev libcurl4-openssl-dev libboost1.74-all-dev
+      - name: build
+        shell: bash
+        run: make -j4
+      - name: create ${{ env.BASE_FILENAME }}.tar.xz
+        shell: bash
+        run: tar -cJf ${{ env.BASE_FILENAME }}.tar.xz *
+        working-directory: build/release/bin
+      - uses: actions/upload-artifact@v4
+        id: upload-artifact-step
+        with:
+          name: ${{ github.job }}   # job names must start with 'build-' for the release workflow to work correctly
+          path: build/release/bin/${{ env.BASE_FILENAME }}.tar.xz

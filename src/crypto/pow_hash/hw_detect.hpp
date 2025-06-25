@@ -70,9 +70,11 @@
 #endif
 
 #if defined(__aarch64__)
-#include <asm/hwcap.h>
-#include <sys/auxv.h>
-#define HAS_ARM_HW
+#if defined(HAVE_HWCAP)
+	#include <sys/auxv.h>
+	#include <asm/hwcap.h>
+  #define HAS_ARM_HW
+#endif
 #endif
 
 #if !defined(_LP64) && !defined(_WIN64)
